@@ -16,19 +16,6 @@ type Transaction struct {
 	Outputs []TxOutput
 }
 
-// Transaction output struct
-type TxOutput struct {
-	Value  int
-	PubKey string
-}
-
-// Transaction input struct
-type TxInput struct {
-	ID  []byte
-	Out int
-	Sig string
-}
-
 // SetID derives and sets the transaction hash
 func (t *Transaction) SetID() {
 	var encoded bytes.Buffer
@@ -94,12 +81,4 @@ func NewTransaction(from, to string, amount int, chain *BlockChain) *Transaction
 // IsCoinbase checks if the current transactions is a coinbase transaction
 func (t *Transaction) IsCoinbase() bool {
 	return len(t.Inputs) == 1 && len(t.Inputs[0].ID) == 0 && t.Inputs[0].Out == -1
-}
-
-func (in *TxInput) CanUnlock(data string) bool {
-	return in.Sig == data
-}
-
-func (out *TxOutput) CanBeUnlocked(data string) bool {
-	return out.PubKey == data
 }
