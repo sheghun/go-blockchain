@@ -1,4 +1,6 @@
 # Misc
 .DS_Store
 
-tmp/blocks/*
+tmp/blocks/*.vlog
+tmp/blocks/*.sst
+tmp/blocks/MANIFEST

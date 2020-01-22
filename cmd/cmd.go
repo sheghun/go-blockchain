@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/sheghun/blockchain/blockchain"
+	"github.com/sheghun/blockchain/wallet"
 	"os"
 	"runtime"
 	"strconv"
@@ -13,15 +14,6 @@ import (
 // Cmd struct for handling command line related tasks
 type Cmd struct {
 	blockchain *blockchain.BlockChain
-}
-
-// printUsage prints the command line possible commands
-func (cli *Cmd) printUsage() {
-	fmt.Println("Usage:")
-	fmt.Println("getBalance -address ADDRESS - get the balance of the address")
-	fmt.Println("createBlockchain -address ADDRESS creates a blockchain")
-	fmt.Println("printChain - Prints the blocks in the chain")
-	fmt.Println("send -from FROM -to TO -amount AMOUNT - Send the amount ")
 }
 
 // validate checks the cmd supplied arguments
@@ -78,6 +70,25 @@ func (cli *Cmd) getBalance(address string) {
 	fmt.Printf("Balance of %s: %d\n", address, balance)
 }
 
+// listAddresses print out all the list to the cmd
+func (cli *Cmd) listAddresses() {
+	wallets := wallet.CreateWallets()
+	addresses := wallets.GetAllAddresses()
+
+	for _, address := range addresses {
+		fmt.Println(address)
+	}
+}
+
+func (cli *Cmd) createWallet() {
+	wallets := wallet.CreateWallets()
+	address := wallets.AddWallet()
+
+	wallets.SaveFile()
+
+	fmt.Printf("New address is %s\n", address)
+}
+
 // Sends a transaction from one address to another
 func (cli *Cmd) send(from, to string, amount int) {
 	chain := blockchain.ContinueBlockChain()
@@ -86,6 +97,17 @@ func (cli *Cmd) send(from, to string, amount int) {
 	tx := blockchain.NewTransaction(from, to, amount, chain)
 	chain.AddBlock([]*blockchain.Transaction{tx})
 	fmt.Println("Success")
+}
+
+// printUsage prints the command line possible commands
+func (cli *Cmd) printUsage() {
+	fmt.Println("Usage:")
+	fmt.Println(" getBalance -address ADDRESS - get the balance of the address")
+	fmt.Println(" createBlockchain -address ADDRESS creates a blockchain")
+	fmt.Println(" printChain - Prints the blocks in the chain")
+	fmt.Println(" send -from FROM -to TO -amount AMOUNT - Send the amount ")
+	fmt.Println(" listAddresses - Lists the addresses in our wallet file")
+	fmt.Println(" createWallet - creates a new wallet")
 }
 
 // Run takes in the command line inputs
@@ -100,6 +122,8 @@ func (cli *Cmd) Run() {
 	createBlockchainCmd := flag.NewFlagSet("createBlockchain", flag.ExitOnError)
 	sendCmd := flag.NewFlagSet("send", flag.ExitOnError)
 	printChainCmd := flag.NewFlagSet("printChain", flag.ExitOnError)
+	listAddressesCmd := flag.NewFlagSet("listAddresses", flag.ExitOnError)
+	createWalletCmd := flag.NewFlagSet("createWallet", flag.ExitOnError)
 
 	getBalanceAddress := getBalanceCmd.String("address", "", "The address balance to retrieve")
 	createBlockchainAddress := createBlockchainCmd.String("address", "", "Address to create blockchain for")
@@ -119,6 +143,14 @@ func (cli *Cmd) Run() {
 
 	case "printChain":
 		err := printChainCmd.Parse(os.Args[2:])
+		blockchain.Handle(err)
+
+	case "listAddresses":
+		err := listAddressesCmd.Parse(os.Args[2:])
+		blockchain.Handle(err)
+
+	case "createWallet":
+		err := createWalletCmd.Parse(os.Args[2:])
 		blockchain.Handle(err)
 
 	case "send":
@@ -159,6 +191,18 @@ func (cli *Cmd) Run() {
 
 	if printChainCmd.Parsed() {
 		cli.printChain()
+		runtime.Goexit()
+		return
+	}
+
+	if listAddressesCmd.Parsed() {
+		cli.listAddresses()
+		runtime.Goexit()
+		return
+	}
+
+	if createWalletCmd.Parsed() {
+		cli.createWallet()
 		runtime.Goexit()
 		return
 	}
