@@ -36,7 +36,7 @@ func (p *ProofOfWork) InitData(n int) []byte {
 	b := bytes.Join(
 		[][]byte{
 			p.Block.PrevHash,
-			p.Block.Data,
+			p.Block.HashTransactions(),
 			ToHex(int64(n)),
 			ToHex(int64(Difficulty))},
 		[]byte{},
