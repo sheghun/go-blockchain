@@ -12,7 +12,7 @@ import (
 )
 
 // Difficulty level
-const Difficulty = 30
+const Difficulty = 12
 
 // ProofOfWork struct
 type ProofOfWork struct {
@@ -70,7 +70,7 @@ func (p *ProofOfWork) Run() (int, []byte) {
 			go calNonce(c, nonce, nonce+3000, p, cl)
 			nonce += 3000
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(100 * time.Millisecond)
 	}
 	// Wait for the nonce to be supplied
 	d := <-c
@@ -117,7 +117,6 @@ func calNonce(c chan struct {
 		// Check if channel is closed
 		case _, cl := <-closeC:
 			if !cl {
-				fmt.Println("\nClosed")
 				// Close the goroutine
 				break
 			}
@@ -125,6 +124,7 @@ func calNonce(c chan struct {
 		default:
 			d := p.InitData(n)    // proof of work byt es
 			h := sha256.Sum256(d) // hash
+			fmt.Printf("\r\r%x", h)
 
 			bigH.SetBytes(h[:]) // Read the bytes into the int
 
