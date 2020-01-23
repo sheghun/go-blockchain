@@ -4,3 +4,4 @@
 tmp/blocks/*.vlog
 tmp/blocks/*.sst
 tmp/blocks/MANIFEST
+tmp/blocks/wallet.data
