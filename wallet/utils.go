@@ -12,8 +12,8 @@ func Base58Encode(input []byte) []byte {
 
 // Base58Encode decode and returns the raw bytes
 // of the supplied byte
-func Base58Decode(input []byte) []byte {
-	decode := base58.Decode(string(input))
+func Base58Decode(input []byte) ([]byte, byte, error) {
+	decode, version, err := base58.CheckDecode(string(input))
 
-	return decode
+	return decode, version, err
 }

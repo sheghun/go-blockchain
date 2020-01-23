@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/binary"
-	"fmt"
 	"log"
 	"math"
 	"math/big"
@@ -62,7 +61,6 @@ func (p *ProofOfWork) Run() (int, []byte) {
 		select {
 		// Check if nonce has been found and sent to channel
 		case d := <-c:
-			fmt.Println("Here")
 			// Close the other channels
 			close(cl)
 			return d.nonce, d.hash[:]
@@ -124,12 +122,10 @@ func calNonce(c chan struct {
 		default:
 			d := p.InitData(n)    // proof of work byt es
 			h := sha256.Sum256(d) // hash
-			fmt.Printf("\r\r%x", h)
 
 			bigH.SetBytes(h[:]) // Read the bytes into the int
 
 			if bigH.Cmp(p.Target) == -1 {
-				fmt.Print("\n\n\nNonce found\n\n\n")
 				// Send in the struct
 				c <- struct {
 					nonce int

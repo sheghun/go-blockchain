@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/sheghun/blockchain/blockchain"
 	"github.com/sheghun/blockchain/wallet"
+	"log"
 	"os"
 	"runtime"
 	"strconv"
@@ -14,6 +15,15 @@ import (
 // Cmd struct for handling command line related tasks
 type Cmd struct {
 	blockchain *blockchain.BlockChain
+}
+
+// validateAddress validates the supplied address and exit
+// the runtime
+func (cli Cmd) validateAddress(address string) {
+	if wallet.ValidateAddress(address) == false {
+		log.Printf("\n\n\n\n ---------- Address is not valid -------------- \n\n\n\n")
+		return
+	}
 }
 
 // validate checks the cmd supplied arguments
@@ -41,6 +51,11 @@ func (cli *Cmd) printChain() {
 		p := blockchain.NewProof(block)
 		fmt.Printf("Proof of work: %s\n\n", strconv.FormatBool(p.Validate()))
 
+		for _, tx := range block.Transactions {
+			fmt.Println(tx.String())
+		}
+		fmt.Println()
+
 		// Check if at last block
 		if len(block.PrevHash) == 0 {
 			break // Exit functions
@@ -50,30 +65,46 @@ func (cli *Cmd) printChain() {
 
 // createBlockchain creates a new blockchain for an address
 func (cli *Cmd) createBlockchain(address string) {
+	cli.validateAddress(address)
+
 	chain := blockchain.InitBlockChain(address)
 	defer chain.Database.Close()
 
-	fmt.Println("Finished")
+	fmt.Printf("\n\n\n\n ----- Blockchain was created and 100 coins was transfered to %s in coinbase transaction \n\n\n\n", address)
 }
 
 func (cli *Cmd) getBalance(address string) {
+	cli.validateAddress(address)
+
 	chain := blockchain.ContinueBlockChain()
 	defer chain.Database.Close()
 
 	balance := 0
-	UTXOs := chain.FindUTXO(address)
+	pubKeyHash, _, _ := wallet.Base58Decode([]byte(address))
+
+	UTXOs := chain.FindUTXO(pubKeyHash)
 
 	for _, out := range UTXOs {
 		balance += out.Value
 	}
 
-	fmt.Printf("Balance of %s: %d\n", address, balance)
+	fmt.Printf("\n\n\n\n ------------ Balance of %s: %d ----------------- \n\n\n\n", address, balance)
 }
 
 // listAddresses print out all the list to the cmd
 func (cli *Cmd) listAddresses() {
 	wallets := wallet.CreateWallets()
 	addresses := wallets.GetAllAddresses()
+
+	if len(addresses) == 0 {
+		fmt.Println()
+		fmt.Println()
+		fmt.Println("--------------------")
+		fmt.Println("------- No Addresses found")
+		fmt.Println("--------------------")
+		fmt.Println()
+		return
+	}
 
 	for _, address := range addresses {
 		fmt.Println(address)
@@ -86,17 +117,20 @@ func (cli *Cmd) createWallet() {
 
 	wallets.SaveFile()
 
-	fmt.Printf("New address is %s\n", address)
+	fmt.Printf("\n\n\n\n\n ------ New address is %s -------\n\n\n\n\n", address)
 }
 
 // Sends a transaction from one address to another
 func (cli *Cmd) send(from, to string, amount int) {
+	cli.validateAddress(to)
+	cli.validateAddress(from)
+
 	chain := blockchain.ContinueBlockChain()
 	defer chain.Database.Close()
 
 	tx := blockchain.NewTransaction(from, to, amount, chain)
 	chain.AddBlock([]*blockchain.Transaction{tx})
-	fmt.Println("Success")
+	fmt.Printf("\n\n\n\n -------- Transactions successful --------- \n\n\n\n")
 }
 
 // printUsage prints the command line possible commands

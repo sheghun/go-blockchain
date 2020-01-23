@@ -5,12 +5,11 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
-	"github.com/sheghun/blockchain/blockchain"
 	"golang.org/x/crypto/ripemd160"
 )
 
 const (
-	checkSumlength = 4
+	checksumLength = 4
 	version        = byte(0x00)
 )
 
@@ -32,12 +31,24 @@ func (w Wallet) Address() []byte {
 	return address
 }
 
-// NewKeyPair generates
+// Example address
+// Address: 1GQ3kTvD4JNqPwQfBMDAf6BhLdzYNhSSds
+// FullHash: 00a8e5bfbae31b2e7f410d9bc9b8ab898e01818451730af9a6
+// [Version] 00
+// [Pub Key Hash] a8e5bfbae31b2e7f410d9bc9b8ab898e01818451
+// [CheckSum] 730af9a6
+func ValidateAddress(addr string) bool {
+	_, _, err := Base58Decode([]byte(addr))
+
+	return err == nil
+}
+
+// NewKeyPair generates returns the private and public keys
 func NewKeyPair() (ecdsa.PrivateKey, []byte) {
 	curve := elliptic.P256()
 
 	private, err := ecdsa.GenerateKey(curve, rand.Reader)
-	blockchain.Handle(err)
+	Handle(err)
 
 	pub := append(private.PublicKey.X.Bytes(), private.PublicKey.Y.Bytes()...)
 
@@ -60,7 +71,7 @@ func PublicKeyHash(pubKey []byte) []byte {
 	ripe := ripemd160.New()
 
 	_, err := ripe.Write(pubHash[:])
-	blockchain.Handle(err)
+	Handle(err)
 
 	publicRipMd := ripe.Sum(nil)
 
@@ -74,6 +85,6 @@ func Checksum(payload []byte) []byte {
 	hash := sha256.Sum256(payload)
 	hash = sha256.Sum256(hash[:])
 
-	return hash[:checkSumlength]
+	return hash[:checksumLength]
 
 }

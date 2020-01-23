@@ -5,8 +5,8 @@ import (
 	"crypto/elliptic"
 	"encoding/gob"
 	"fmt"
-	"github.com/sheghun/blockchain/blockchain"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -20,7 +20,6 @@ type Wallets struct {
 // CreateWallets creates and returns wallet
 func CreateWallets() *Wallets {
 	wallets := &Wallets{}
-
 	wallets.Wallets = make(map[string]*Wallet)
 
 	wallets.LoadFile()
@@ -58,16 +57,23 @@ func (ws *Wallets) GetAllAddresses() []string {
 func (ws *Wallets) LoadFile() {
 	var wallets Wallets
 
+	// If no data has been saved
 	if _, err := os.Stat(walletFile); os.IsNotExist(err) {
 		_, _ = os.Create(walletFile)
+		return // exit the function without modifying the wallet struct
 	}
 
 	fileContent, err := ioutil.ReadFile(walletFile)
-	blockchain.Handle(err)
+	Handle(err)
 
 	gob.Register(elliptic.P256())
 	decoder := gob.NewDecoder(bytes.NewReader(fileContent))
 	err = decoder.Decode(&wallets)
+
+	// If no wallets exists/nil
+	if len(wallets.Wallets) == 0 {
+		return
+	}
 
 	ws.Wallets = wallets.Wallets
 
@@ -81,9 +87,17 @@ func (ws *Wallets) SaveFile() {
 
 	encoder := gob.NewEncoder(&content)
 	err := encoder.Encode(ws)
-	blockchain.Handle(err)
+	Handle(err)
 
 	err = ioutil.WriteFile(walletFile, content.Bytes(), 0644)
-	blockchain.Handle(err)
+	Handle(err)
 
+}
+
+// Handle takes the error and prints it out
+func Handle(err error) {
+	if err != nil {
+		log.Panic(err)
+
+	}
 }
