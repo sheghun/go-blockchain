@@ -13,7 +13,7 @@ blocks are mined only when transactions takes place, it is currently limited as 
 one transaction per block it's not a full fledged blockchain protocol
 but a very simple version of it, it implements the basic ideas of the bitcoin protocol
 
-##Usage
+## Usage
 ### Initialisation
 When creating the first transaction or mining the first block we have to supply an address so
 that the 100 coins reward for mining the genesis block is transferred to the address 
