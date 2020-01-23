@@ -1,7 +1,9 @@
 # Go-BlockChain
 
 I've been playing around with bitcoin and etheruem for the past few weeks, so I decided to build my
-own blockchain protocol, basically just a test of knowledge to know what I've learnt so far
+own blockchain protocol, basically just a test of knowledge to know what I've learnt so far.
+
+Please star the repo and kindly follow me, I follow back 😎  
 
 This a blockchain protocol written in Golang,
 It is inspired by the bitcoin blockchain protocol, although not exactly like it.
