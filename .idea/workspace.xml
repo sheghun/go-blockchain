@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="099d483e-c729-47e4-8d24-8bc41a509faf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/sheghun1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/sheghun1.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/blockchain.go" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/blockchain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/proof.go" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/proof.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/transaction.go" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/transaction.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blockchain/tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/blockchain/tx.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cmd.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cmd.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp/blocks/wallets.data" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/blocks/wallets.data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/wallet/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet/wallet.go" beforeDir="false" afterPath="$PROJECT_DIR$/wallet/wallet.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wallet/wallets.go" beforeDir="false" afterPath="$PROJECT_DIR$/wallet/wallets.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
